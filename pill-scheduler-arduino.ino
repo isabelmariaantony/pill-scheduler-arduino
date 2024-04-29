@@ -37,14 +37,14 @@ struct DispenseArrayWrapper {
 
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = "Poker";        // your network SSID (name)
-char pass[] = "chinchan";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "jovi";        // your network SSID (name)
+char pass[] = "chinchan4142";    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
-IPAddress server(192,168,87,148);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
+IPAddress server(10,0,0,132);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
@@ -159,8 +159,8 @@ DispenseArrayWrapper getDispenses(String body) {
   int index = 0;
   for(JsonVariant v : arr) {
     String boxInfo = v["boxNumber"]; // Get the BoxNumber as in "Box 1"
-    int boxNumber = (boxInfo.substring(4)).toInt();
-    int pillQuantity = v["amount"];
+    int boxNumber = boxInfo.toInt();
+    int pillQuantity = v["count"];
     dispenses[index++] = Dispense(boxNumber, pillQuantity);
   }
   DispenseArrayWrapper dispenseArrayWrapper = DispenseArrayWrapper(dispenses, length);
@@ -192,7 +192,7 @@ void loop() {
   if (client.connect(server, 4000)) {
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("GET /pillsByCurrentSchedule");
+    client.println("GET /pillsByTimeRange");
     client.println("Connection: close");
     client.println();
     String response = read_response_with_wait();
@@ -207,7 +207,7 @@ void loop() {
     
   }
   if (pillsDispensed && client.connect(server, 4000)) {
-    client.println("GET /markScheduleAsServed");
+    client.println("GET /markServed");
     client.println("Connection: close");
     client.println();
 
