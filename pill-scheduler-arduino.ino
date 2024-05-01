@@ -37,18 +37,18 @@ struct DispenseArrayWrapper {
 
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = "jovi";        // your network SSID (name)
-char pass[] = "chinchan4142";    // your network password (use for WPA, or use as key for WEP)
+char ssid[] = "wifi-name";        // your network SSID (name)
+char pass[] = "wifi-password";    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
-IPAddress server(10,0,0,132);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
+IPAddress server(192,168,210,148);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
-// that you want to connect to (port 80 is default for HTTP):
+// that you want to connect to (port 80 is def  ault for HTTP):
 WiFiClient client;
 DynamicJsonDocument doc(1024);
 
