@@ -44,12 +44,13 @@ int keyIndex = 0;            // your network key index number (needed only for W
 int status = WL_IDLE_STATUS;
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
-IPAddress server(192,168,210,148);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
+//IPAddress server(192,168,210,148);   // On Mac, call ifconfig to get the ip address. It will be under en0 , inet
+char server[] = "pill-scheduler-backend.onrender.com";   
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is def  ault for HTTP):
-WiFiClient client;
+WiFiSSLClient client;
 DynamicJsonDocument doc(1024);
 
 
@@ -189,10 +190,11 @@ void loop() {
   // if you get a connection, report back via serial:
   Serial.println("\nStarting connection to server...");
   boolean pillsDispensed = false;
-  if (client.connect(server, 4000)) {
+  if (client.connect(server, 443)) {
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("GET /pillsByTimeRange");
+    client.println("GET /pillsByTimeRange HTTP/1.1");
+    client.println("Host: pill-scheduler-backend.onrender.com");
     client.println("Connection: close");
     client.println();
     String response = read_response_with_wait();
@@ -206,16 +208,17 @@ void loop() {
     }
     
   }
-  if (pillsDispensed && client.connect(server, 4000)) {
-    client.println("GET /markServed");
+  if (pillsDispensed && client.connect(server, 443)) {
+    client.println("GET /markServed HTTP/1.1");
+    client.println("Host: pill-scheduler-backend.onrender.com");
     client.println("Connection: close");
     client.println();
 
     String response2 = read_response_with_wait();
     Serial.println(response2);
   }
-  // wait for 5 seconds before checking again 
-  delay(5000);
+  // wait for 10 seconds before checking again 
+  delay(10000);
 }
 
 //
